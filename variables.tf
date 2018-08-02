@@ -69,6 +69,11 @@ variable url_map {
   default     = ""
 }
 
+variable quic_override {
+  description = "Set the QUIC override policy to one of NONE, ENABLE, or DISABLE"
+  default     = "NONE"
+}
+
 variable http_forward {
   description = "Set to `false` to disable HTTP port 80 forward"
   default     = true
