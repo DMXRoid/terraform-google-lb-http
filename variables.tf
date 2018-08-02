@@ -54,6 +54,44 @@ variable backend_params {
   type        = "list"
 }
 
+variable backend_parameters {
+  description = "A map of backend parameters"
+  type        = "map"
+
+  default = {
+    "named_port" = ""
+    "timeout"    = "60"
+  }
+}
+
+variable http_health_check {
+  description = "Parmeters for http/s health checks"
+  type        = "map"
+
+  default = {
+    "host"           = ""
+    "port"           = "80"
+    "proxy_header"   = "NONE"
+    "request_path"   = "/"
+    "timeout"        = "1"
+    "check_interval" = "1"
+  }
+}
+
+variable tcp_health_check {
+  description = "Parameters for tcp/ssl health checks"
+  type        = "map"
+
+  default = {
+    "port"           = "80"
+    "proxy_header"   = "NONE"
+    "request"        = ""
+    "response"       = ""
+    "timeout"        = "1"
+    "check_interval" = "1"
+  }
+}
+
 variable backend_protocol {
   description = "The protocol with which to talk to the backend service"
   default     = "HTTP"
