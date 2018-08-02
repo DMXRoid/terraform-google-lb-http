@@ -83,7 +83,7 @@ resource "google_compute_backend_service" "default" {
   name            = "${var.name}-backend-${count.index}"
   port_name       = "${lookup(var.backend_parameters[count.index], "named_port")}"
   protocol        = "${var.backend_protocol}"
-  timeout_sec     = "${element(var.backend_parameters.*.timeout, count.index)}"
+  timeout_sec     = "${var.backend_parameters[count.index].timeout}"
   backend         = ["${var.backends["${count.index}"]}"]
   health_checks   = ["${var.ssl ? google_compute_health_check.default-https[count.index].self_link : google_compute_health_check.default-http[count.index].self_link}"]
   security_policy = "${var.security_policy}"
@@ -92,28 +92,28 @@ resource "google_compute_backend_service" "default" {
 resource "google_compute_health_check" "default-https" {
   name               = "${var.name}-backend-https-${count.index}"
   count              = "${var.ssl ? length(var.http_health_check) : 0}"
-  timeout_sec        = "${element(var.http_health_check.*.timeout, count.index)}"
-  check_interval_sec = "${element(var.http_health_check.*.check_interval, count.index)}"
+  timeout_sec        = "${var.http_health_check[count.index].timeout}"
+  check_interval_sec = "${var.http_health_check[count.index].check_interval}"
 
   https_health_check = {
-    host         = "${element(var.http_health_check.*.host, count.index)}"
-    port         = "${element(var.http_health_check.*.port, count.index) }"
-    proxy_header = "${element(var.http_health_check.*.proxy_header, count.index)}"
-    request_path = "${element(var.http_health_check.*.request_path, count.index)}"
+    host         = "${var.http_health_check[count.index].host}"
+    port         = "${var.http_health_check[count.index].port }"
+    proxy_header = "${var.http_health_check[count.index].proxy_header}"
+    request_path = "${var.http_health_check[count.index].request_path}"
   }
 }
 
 resource "google_compute_health_check" "default-http" {
   name               = "${var.name}-backend-https-${count.index}"
   count              = "${var.ssl ? 0 : length(var.http_health_check)}"
-  timeout_sec        = "${element(var.http_health_check.*.timeout, count.index)}"
-  check_interval_sec = "${element(var.http_health_check.*.check_interval, count.index)}"
+  timeout_sec        = "${var.http_health_check[count.index].timeout}"
+  check_interval_sec = "${var.http_health_check[count.index].check_interval}"
 
   http_health_check = {
-    host         = "${element(var.http_health_check.*.host, count.index)}"
-    port         = "${element(var.http_health_check.*.port, count.index) }"
-    proxy_header = "${element(var.http_health_check.*.proxy_header, count.index)}"
-    request_path = "${element(var.http_health_check.*.request_path, count.index)}"
+    host         = "${var.http_health_check[count.index].host}"
+    port         = "${var.http_health_check[count.index].port }"
+    proxy_header = "${var.http_health_check[count.index].proxy_header}"
+    request_path = "${var.http_health_check[count.index].request_path}"
   }
 }
 
@@ -128,6 +128,6 @@ resource "google_compute_firewall" "default-hc" {
 
   allow {
     protocol = "tcp"
-    ports    = ["${element(var.http_health_check.*)}"]
+    ports    = ["${element(var.http_health_check.*.port, count.index)}"]
   }
 }
