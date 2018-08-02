@@ -81,11 +81,11 @@ resource "google_compute_backend_service" "default" {
   project         = "${var.project}"
   count           = "${length(var.backend_parameters)}"
   name            = "${var.name}-backend-${count.index}"
-  port_name       = "${var.backend_parameters["${count.index}"].named_port}"
+  port_name       = "${lookup(var.backend_parameters["${count.index}"], "named_port")}"
   protocol        = "${var.backend_protocol}"
-  timeout_sec     = "${var.backend_parameters["${count.index}"].timeout}"
+  timeout_sec     = "${lookup(var.backend_parameters["${count.index}"], "timeout")}"
   backend         = ["${var.backends["${count.index}"]}"]
-  health_checks   = ["${var.ssl ? google_compute_health_check.default-https["${count.index}"].self_link : google_compute_health_check.default-http["${count.index}"].self_link}"]
+  health_checks   = ["${var.ssl ? lookup(google_compute_health_check.default-https["${count.index}"],"self_link") : lookup(google_compute_health_check.default-http["${count.index}"],"self_link")}"]
   security_policy = "${var.security_policy}"
 }
 
