@@ -128,6 +128,6 @@ resource "google_compute_firewall" "default-hc" {
 
   allow {
     protocol = "tcp"
-    ports    = ["${lookup(var.http_health_check[count.index],"port")}"]
+    ports    = ["${lookup(var.http_health_check,"port")}"]
   }
 }
