@@ -85,7 +85,7 @@ resource "google_compute_backend_service" "default" {
   protocol        = "${var.backend_protocol}"
   timeout_sec     = "${lookup(var.backend_parameters["${count.index}"], "timeout")}"
   backend         = ["${var.backends["${count.index}"]}"]
-  health_checks   = ["${google_compute_health_check.default-https.self_link)}"]
+  health_checks   = ["${google_compute_health_check.default-https.self_link}"]
   security_policy = "${var.security_policy}"
 }
 
