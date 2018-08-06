@@ -83,7 +83,7 @@ resource "google_compute_backend_service" "default" {
   name            = "${var.name}-backend-${count.index}"
   port_name       = "${lookup(var.backend_parameters, "named_port")}"
   protocol        = "${var.backend_protocol}"
-  timeout_sec     = "${lookup(var.backend_parameters, "timeout")}"
+  timeout_sec     = "${lookup(var.backend_parameters, "timeout", "60")}"
   backend         = ["${var.backends["${count.index}"]}"]
   health_checks   = ["${google_compute_health_check.default-https.self_link}"]
   security_policy = "${var.security_policy}"
@@ -96,24 +96,24 @@ resource "google_compute_health_check" "default-https" {
   check_interval_sec = "${lookup(var.http_health_check, "check_interval")}"
 
   https_health_check = {
-    host         = "${lookup(var.http_health_check, "host")}"
-    port         = "${lookup(var.http_health_check, "port")}"
-    proxy_header = "${lookup(var.http_health_check, "proxy_header")}"
-    request_path = "${lookup(var.http_health_check, "request_path")}"
+    host         = "${lookup(var.http_health_check, "host", "")}"
+    port         = "${lookup(var.http_health_check, "port", "443")}"
+    proxy_header = "${lookup(var.http_health_check, "proxy_header", "")}"
+    request_path = "${lookup(var.http_health_check, "request_path", "/")}"
   }
 }
 
 resource "google_compute_health_check" "default-http" {
   name               = "${var.name}-backend-https-${count.index}"
   count              = "${var.ssl ? 0 : 1}"
-  timeout_sec        = "${lookup(var.http_health_check, "timeout")}"
-  check_interval_sec = "${lookup(var.http_health_check, "check_interval")}"
+  timeout_sec        = "${lookup(var.http_health_check, "timeout", "1")}"
+  check_interval_sec = "${lookup(var.http_health_check, "check_interval", "1")}"
 
   http_health_check = {
-    host         = "${lookup(var.http_health_check, "host")}"
-    port         = "${lookup(var.http_health_check, "port")}"
-    proxy_header = "${lookup(var.http_health_check, "proxy_header")}"
-    request_path = "${lookup(var.http_health_check, "request_path")}"
+    host         = "${lookup(var.http_health_check, "host", "")}"
+    port         = "${lookup(var.http_health_check, "port", "80")}"
+    proxy_header = "${lookup(var.http_health_check, "proxy_header", "")}"
+    request_path = "${lookup(var.http_health_check, "request_path", "")}"
   }
 }
 
