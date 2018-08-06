@@ -91,7 +91,7 @@ resource "google_compute_backend_service" "default" {
 
 resource "google_compute_health_check" "default-https" {
   name               = "${var.name}-backend-https-${count.index}"
-  count              = "${var.ssl ? length(var.http_health_check) : 0}"
+  count              = "${var.ssl ? 1 : 0}"
   timeout_sec        = "${lookup(var.http_health_check, "timeout")}"
   check_interval_sec = "${lookup(var.http_health_check, "check_interval")}"
 
@@ -105,7 +105,7 @@ resource "google_compute_health_check" "default-https" {
 
 resource "google_compute_health_check" "default-http" {
   name               = "${var.name}-backend-https-${count.index}"
-  count              = "${var.ssl ? 0 : length(var.http_health_check)}"
+  count              = "${var.ssl ? 0 : 1}"
   timeout_sec        = "${lookup(var.http_health_check, "timeout")}"
   check_interval_sec = "${lookup(var.http_health_check, "check_interval")}"
 
