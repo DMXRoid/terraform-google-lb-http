@@ -92,8 +92,8 @@ resource "google_compute_backend_service" "default" {
 resource "google_compute_health_check" "default-https" {
   name               = "${var.name}-backend-https-${count.index}"
   count              = "${var.ssl ? 1 : 0}"
-  timeout_sec        = "${lookup(var.http_health_check, "timeout")}"
-  check_interval_sec = "${lookup(var.http_health_check, "check_interval")}"
+  timeout_sec        = "${lookup(var.http_health_check, "timeout", "1")}"
+  check_interval_sec = "${lookup(var.http_health_check, "check_interval", "1")}"
 
   https_health_check = {
     host         = "${lookup(var.http_health_check, "host", "")}"
