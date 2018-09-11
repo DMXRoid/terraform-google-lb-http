@@ -87,6 +87,7 @@ resource "google_compute_backend_service" "default" {
   backend         = ["${var.backends["${count.index - 1}"]}"]
   health_checks   = ["${google_compute_health_check.default-https.self_link}"]
   security_policy = "${var.security_policy}"
+  enable_cdn      = "${var.cdn}"
 }
 
 resource "google_compute_health_check" "default-https" {
@@ -118,7 +119,6 @@ resource "google_compute_health_check" "default-http" {
 }
 
 resource "google_compute_firewall" "default-hc" {
-  count         = "${length(var.firewall_networks)}"
   project       = "${var.project}"
   count         = "${length(var.backend_parameters)}"
   name          = "${var.name}-hc-${count.index}"

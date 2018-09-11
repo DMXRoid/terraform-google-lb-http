@@ -1,5 +1,8 @@
 # Global HTTP Load Balancer Terraform Module
 
+<a href="https://concourse-tf.gcp.solutions/teams/main/pipelines/tf-lb-http-regression" target="_blank">
+<img src="https://concourse-tf.gcp.solutions/api/v1/teams/main/pipelines/tf-lb-http-regression/badge" /></a>
+
 Modular Global HTTP Load Balancer for GCE using forwarding rules.
 
 ## Usage
@@ -23,6 +26,10 @@ module "gce-lb-http" {
 ```
 
 ## Resources created
+
+**Figure 1.** *diagram of terraform resources*
+
+![architecture diagram](https://raw.githubusercontent.com/GoogleCloudPlatform/terraform-google-lb-http/master/diagram.png)
 
 - [`google_compute_global_forwarding_rule.http`](https://www.terraform.io/docs/providers/google/r/compute_global_forwarding_rule.html): The global HTTP forwarding rule.
 - [`google_compute_global_forwarding_rule.https`](https://www.terraform.io/docs/providers/google/r/compute_global_forwarding_rule.html): The global HTTPS forwarding rule created when `ssl` is `true`.

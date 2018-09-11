@@ -30,7 +30,13 @@ variable ip_version {
 }
 
 variable firewall_networks {
-  description = "Name of the networks to create firewall rules in"
+  description = "Names of the networks to create firewall rules in"
+  type        = "list"
+  default     = ["default"]
+}
+
+variable firewall_projects {
+  description = "Names of the projects to create firewall rules in"
   type        = "list"
   default     = ["default"]
 }
@@ -146,4 +152,9 @@ variable ssl_certificates {
 variable security_policy {
   description = "The resource URL for the security policy to associate with the backend service"
   default     = ""
+}
+
+variable cdn {
+  description = "Set to `true` to enable cdn on backend."
+  default     = "false"
 }
