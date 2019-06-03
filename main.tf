@@ -84,7 +84,7 @@ resource "google_compute_backend_service" "default" {
   port_name       = "${lookup(var.backend_parameters, "named_port")}"
   protocol        = "${var.backend_protocol}"
   timeout_sec     = "${lookup(var.backend_parameters, "timeout", "60")}"
-  backend         = ["${var.backends}"]
+  backend         = ["${var.backends[${count.index}]}"]
   health_checks   = ["${google_compute_health_check.default-https.self_link}"]
   security_policy = "${var.security_policy}"
   enable_cdn      = "${var.cdn}"
