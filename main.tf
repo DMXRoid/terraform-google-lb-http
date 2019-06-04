@@ -120,7 +120,7 @@ resource "google_compute_health_check" "default-http" {
 
 # Create firewall rule for each backend in each network specified, uses mod behavior of element().
 resource "google_compute_firewall" "default-hc" {
-  count         = "${length(var.firewall_networks) * length(var.backends)}"
+  count         = "1"
   project       = "${element(var.firewall_projects, count.index) == "default" ? var.project : element(var.firewall_projects, count.index)}"
   name          = "${var.name}-hc-${count.index}"
   network       = "${element(var.firewall_networks, count.index)}"
