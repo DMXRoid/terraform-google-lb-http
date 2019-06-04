@@ -79,12 +79,12 @@ resource "google_compute_url_map" "default" {
 
 resource "google_compute_backend_service" "default" {
   project         = "${var.project}"
-  count           = "${length(var.backends)}"
+  count           = "1"
   name            = "${var.name}-backend-${count.index}"
   port_name       = "${lookup(var.backend_parameters, "named_port")}"
   protocol        = "${var.backend_protocol}"
   timeout_sec     = "${lookup(var.backend_parameters, "timeout", "60")}"
-  backend         = ["${var.backends[count.index]}"]
+  backend         = ["${var.backends[0]}"]
   health_checks   = ["${google_compute_health_check.default-https.self_link}"]
   security_policy = "${var.security_policy}"
   enable_cdn      = "${var.cdn}"
