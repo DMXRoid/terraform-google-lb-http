@@ -60,7 +60,7 @@ resource "google_compute_target_https_proxy" "default" {
 
 resource "google_compute_ssl_certificate" "default" {
   project     = "${var.project}"
-  count       = "${(var.ssl && !var.use_ssl_certificates) ? 1 : 0}"
+  count       = "${(var.ssl && ! var.use_ssl_certificates) ? 1 : 0}"
   name_prefix = "${var.name}-certificate-"
   private_key = "${var.private_key}"
   certificate = "${var.certificate}"
@@ -120,7 +120,7 @@ resource "google_compute_health_check" "default-http" {
 
 # Create firewall rule for each backend in each network specified, uses mod behavior of element().
 resource "google_compute_firewall" "default-hc" {
-  count         = ${length(var.backends)}"
+  count         = "${length(var.backends)}"
   project       = "${element(var.firewall_projects, count.index) == "default" ? var.project : element(var.firewall_projects, count.index)}"
   name          = "${var.name}-hc-${count.index}"
   network       = "${element(var.firewall_networks, count.index)}"
@@ -129,6 +129,6 @@ resource "google_compute_firewall" "default-hc" {
 
   allow {
     protocol = "tcp"
-    ports    = ["${lookup(var.http_health_check,"port")}"]
+    ports    = ["${lookup(var.http_health_check, "port")}"]
   }
 }
