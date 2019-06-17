@@ -79,12 +79,12 @@ resource "google_compute_url_map" "default" {
 
 resource "google_compute_backend_service" "default" {
   project         = "${var.project}"
-  count           = "1"
+  count           = "${length(var.backends)}"
   name            = "${var.name}-backend-${count.index}"
   port_name       = "${lookup(var.backend_parameters, "named_port")}"
   protocol        = "${var.backend_protocol}"
   timeout_sec     = "${lookup(var.backend_parameters, "timeout", "60")}"
-  backend         = ["${var.backends[0]}"]
+  backend         = ["${var.backends[count.index]}"]
   health_checks   = ["${google_compute_health_check.default-https.self_link}"]
   security_policy = "${var.security_policy}"
   enable_cdn      = "${var.cdn}"
@@ -120,7 +120,7 @@ resource "google_compute_health_check" "default-http" {
 
 # Create firewall rule for each backend in each network specified, uses mod behavior of element().
 resource "google_compute_firewall" "default-hc" {
-  count         = "1"
+  count         = ${length(var.backends)}"
   project       = "${element(var.firewall_projects, count.index) == "default" ? var.project : element(var.firewall_projects, count.index)}"
   name          = "${var.name}-hc-${count.index}"
   network       = "${element(var.firewall_networks, count.index)}"
